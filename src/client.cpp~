@@ -1,0 +1,26 @@
+#include "clientNode.h"
+
+int main(int argc, char **argv)
+{
+  // Set up ROS.
+  ros::init(argc, argv, "listener");
+  ros::NodeHandle nh;
+  int rate;
+  nh.param("rate", rate, int(40));
+
+  ClientNode *client = new ClientNode();
+
+  ros::Subscriber sub_message = nh.subscribe("example", 1000, &ClientNode::subscriberCallback, l);
+
+  // Tell ROS how fast to run this node.
+  ros::Rate r(rate);
+
+  // Main loop.
+  while (nh.ok())
+  {
+    ros::spinOnce();
+    r.sleep();
+  }
+
+  return 0;
+} // end main()
