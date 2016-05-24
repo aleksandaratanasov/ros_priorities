@@ -7,6 +7,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   dynamic_reconfigure
+  actionlib
+  actionlib_msgs
 )
 
 find_package(Boost REQUIRED COMPONENTS system thread)
@@ -17,25 +19,24 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 add_message_files(
   FILES
   Chatter.msg
+  ColorWithPrio.msg
 )
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
+add_service_files(
+  FILES
 #   Service1.srv
 #   Service2.srv
-# )
+)
 
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(
+  FILES
+  ColorWithPrioAction.action
+)
 
 generate_messages(
   DEPENDENCIES
   std_msgs
+  actionlib_msgs
 )
 
 generate_dynamic_reconfigure_options(
@@ -45,26 +46,26 @@ generate_dynamic_reconfigure_options(
 
 catkin_package(
  INCLUDE_DIRS include
- CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+ CATKIN_DEPENDS actionlib actionlib_msgs message_runtime roscpp std_msgs rospy
 #  DEPENDS system_lib
 )
 
-include_directories(include 
+include_directories(include
   ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
 )
 
-# Set the name to use for the executable.
+# Set the name to use for the executable
 set(BINNAME1 ${PROJECT_NAME}_server)
 set(BINNAME2 ${PROJECT_NAME}_client)
 
-# Set the source files to use with the executable.
+# Set the source files to use with the executable
 set(SRCS1 ${SRCS1} src/serverNode.cpp)
 set(SRCS1 ${SRCS1} src/server.cpp)
 set(SRCS2 ${SRCS2} src/clientNode.cpp)
 set(SRCS2 ${SRCS2} src/client.cpp)
 
-# Build the executable that will be used to run this node.
+# Build the server and client executables that will be used to run this node
 add_executable(${BINNAME1} ${SRCS1})
 add_dependencies(${BINNAME1} ${BINNAME1}_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${BINNAME1} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
