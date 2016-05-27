@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
 )
 
+find_package(Boost REQUIRED COMPONENTS system thread signals)
+
 # catkin_python_setup()
 
 ## Generate messages in the 'msg' folder
@@ -43,17 +45,21 @@ generate_dynamic_reconfigure_options(
 )
 
 catkin_package(
- INCLUDE_DIRS include/prio_playground
+ INCLUDE_DIRS include/prio_playground common/include
  CATKIN_DEPENDS actionlib actionlib_msgs message_runtime roscpp rospy std_msgs
  DEPENDS system_lib
 )
 
-add_subdirectory(common)
-
 include_directories(include
   include/prio_playground
+  common/include
   ${catkin_INCLUDE_DIRS}
 )
+
+add_library(prio_playground_common
+  common/src/mode.cpp
+)
+target_link_libraries(prio_playground_common ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 # Set the name to use for the executable
 set(BINNAME1 ${PROJECT_NAME}_server)
