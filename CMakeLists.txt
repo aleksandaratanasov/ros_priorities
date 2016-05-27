@@ -11,8 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
 )
 
-find_package(Boost REQUIRED COMPONENTS system thread)
-
 # catkin_python_setup()
 
 ## Generate messages in the 'msg' folder
@@ -50,10 +48,11 @@ catkin_package(
  DEPENDS system_lib
 )
 
+add_subdirectory(common)
+
 include_directories(include
   include/prio_playground
   ${catkin_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
 )
 
 # Set the name to use for the executable
@@ -66,11 +65,12 @@ set(SRC_CLIENT src/clientNode.cpp src/client.cpp)
 
 # Build the server and client executables that will be used to run this node
 add_executable(${BINNAME1} ${SRC_SERVER})
-target_link_libraries(${BINNAME1} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${BINNAME1} ${catkin_LIBRARIES})
+target_link_libraries(${BINNAME1} LINK_PUBLIC prio_playground_common)
 add_dependencies(${BINNAME1} ${PROJECT_NAME}_generate_messages_cpp) # ${catkin_EXPORTED_TARGETS}
 
 add_executable(${BINNAME2} ${SRC_CLIENT})
-target_link_libraries(${BINNAME2} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${BINNAME2} ${catkin_LIBRARIES})
 add_dependencies(${BINNAME2} ${PROJECT_NAME}_generate_messages_cpp) # ${catkin_EXPORTED_TARGETS}
 
 #############
