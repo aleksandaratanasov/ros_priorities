@@ -45,12 +45,13 @@ generate_dynamic_reconfigure_options(
 )
 
 catkin_package(
- INCLUDE_DIRS include
- CATKIN_DEPENDS actionlib actionlib_msgs message_runtime roscpp std_msgs rospy
-#  DEPENDS system_lib
+ INCLUDE_DIRS include/prio_playground
+ CATKIN_DEPENDS actionlib actionlib_msgs message_runtime roscpp rospy std_msgs
+ DEPENDS system_lib
 )
 
 include_directories(include
+  include/prio_playground
   ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
 )
@@ -60,19 +61,17 @@ set(BINNAME1 ${PROJECT_NAME}_server)
 set(BINNAME2 ${PROJECT_NAME}_client)
 
 # Set the source files to use with the executable
-set(SRCS1 ${SRCS1} src/serverNode.cpp)
-set(SRCS1 ${SRCS1} src/server.cpp)
-set(SRCS2 ${SRCS2} src/clientNode.cpp)
-set(SRCS2 ${SRCS2} src/client.cpp)
+set(SRC_SERVER src/serverNode.cpp src/server.cpp)
+set(SRC_CLIENT src/clientNode.cpp src/client.cpp)
 
 # Build the server and client executables that will be used to run this node
-add_executable(${BINNAME1} ${SRCS1})
-add_dependencies(${BINNAME1} ${BINNAME1}_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
+add_executable(${BINNAME1} ${SRC_SERVER})
 target_link_libraries(${BINNAME1} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(${BINNAME1} ${PROJECT_NAME}_generate_messages_cpp) # ${catkin_EXPORTED_TARGETS}
 
-add_executable(${BINNAME2} ${SRCS2})
-add_dependencies(${BINNAME2} ${BINNAME2}_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
+add_executable(${BINNAME2} ${SRC_CLIENT})
 target_link_libraries(${BINNAME2} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(${BINNAME2} ${PROJECT_NAME}_generate_messages_cpp) # ${catkin_EXPORTED_TARGETS}
 
 #############
 ## Testing ##
